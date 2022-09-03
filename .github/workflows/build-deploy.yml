@@ -9,6 +9,9 @@ jobs:
   # to build the project
   build:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: checking out code
         uses: actions/checkout@v3
@@ -23,8 +26,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: arn:aws:iam::278625464175:role/githubAssumeRole
           aws-region: ap-south-1
       - name: Deploy to S3 bucket
         run: aws s3 sync ./dist/ s3://drb-react-ts-shoppingcart --delete
